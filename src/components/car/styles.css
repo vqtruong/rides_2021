@@ -1,0 +1,216 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://example.com/MaterialIcons-Regular.eot); /* For IE6-8 */
+    src: local('Material Icons'),
+        local('MaterialIcons-Regular'),
+        url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+        url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+        url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@300;400;500;600;700&display=swap');
+
+.carList {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 50px;
+}
+
+.car {
+    background-color: #ffd4d4;
+    border-radius: 25px;
+    padding: 40px;
+    padding-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 320px;
+    margin-bottom: 30px;
+    margin-right: 30px;
+    box-shadow: 7px 8px 14px -15px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 7px 8px 14px -15px rgba(0,0,0,0.75);
+    -moz-box-shadow: 7px 8px 14px -15px rgba(0,0,0,0.75);
+}
+
+.over {
+    opacity: 0.5;
+    color: red;
+}
+
+.carHeader {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid black;
+    cursor: pointer;
+}
+
+.driverDetails {
+    width: 100%;
+}
+
+.relative:hover {
+    opacity: 0.75;
+}
+
+.relative { 
+    position: relative;
+    width: 100%;
+}
+
+.hoverbox {
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    text-align: right;
+    opacity: 0;
+}
+
+.hoverbox:hover {
+    opacity: 1;
+}
+
+.carHeader:hover .hoverbox {
+    display: inline;
+}
+
+.pickupLocation {
+    width: 100%;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+}
+
+.pickupTime {
+    width: 40%;
+    min-width: 100px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+}
+
+select {
+    border: none;
+    background-color: inherit;
+}
+
+.driverName {
+    width: 100%;
+    font-family: 'Spartan', sans-serif;
+    font-size: 24px;
+    margin: 0;
+    margin-top: 7px;
+}
+
+.driverName h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.driverPhone {
+    width: 100%;
+    margin: 0;
+    font-weight: normal;
+    padding-bottom: 8px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.passengers {
+    width: 90%;
+    padding-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.passengerEntry {
+    margin-bottom: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.passengerEntry:hover {
+    opacity: 0.65;
+}
+
+.passengerEntryContents {
+    width: 100%;
+}
+
+.passengerName {
+    font-size: 18px;
+}
+
+.passengerPhone {
+    font-size: 16px;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    margin: 0;
+}
+
+.passengerEntryActions {
+    width: 15%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+}
+
+.passengerEntryActions:hover {
+    opacity: 1;
+}
+
+.remove {
+    width: 100%;
+}
+
+.removeButton {
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 0;
+    right: 0;
+
+}
+
+.remove-icon {
+    cursor: pointer;
+    color: #aa0e23;
+    margin: 0;
+    padding: 0;
+    
+}
+
+.remove-icon-driver {
+    opacity: 0.2;
+    font-size: 100px;
+    color: #aa0e23;
+}
+
+.delete-button:hover {
+    color: rgb(184, 1, 1);
+}
+
+.view-only {
+    display: none;
+}

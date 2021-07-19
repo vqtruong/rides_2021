@@ -1,0 +1,54 @@
+#register {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 5%;
+}
+
+#register h1 {
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: center;
+}
+
+#register form {
+    width: 50%;
+}
+
+form button {
+    margin-top: 15px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.submit-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#submit-btn a:link {
+    text-decoration: none;
+    color: white;
+}
+
+.navLink {
+    text-decoration: none;
+    color: white;
+}
+
+#login {
+    text-align: center;
+}
+
+.alert-box {
+    margin-top: 10px;
+}

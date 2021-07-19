@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "name": "Matthew Ahn",
+      "email": "tranngo@usc.edu",
+      "phone": "9097296009",
+      "pickupLocation": "EVK",
+      "canDrive": false,
+      "id": 1
+    },
+    {
+      "name": "Sydney Cheng",
+      "email": "tranngo@usc.edu",
+      "phone": "9097296009",
+      "pickupLocation": "EVK",
+      "canDrive": false,
+      "id": 2
+    },
+    {
+      "name": "Michael Jackson",
+      "email": "usc@usc.edu",
+      "phone": "9097296009",
+      "pickupLocation": "EVK",
+      "canDrive": false,
+      "id": 3
+    }
+  ],
+  "cars": []
+}
