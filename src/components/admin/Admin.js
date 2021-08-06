@@ -2,25 +2,30 @@ import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import CarList from "../car/CarList";
 import Sidebar from "./Sidebar";
+import DefaultModal from "./DefaultModal";
+import ConfirmDriverModal from "./ConfirmDriverModal";
+import AddUserModal from "./AddUserModal";
+import UserProfileModal from "./UserProfileModal";
 import Car from "./Car";
 import User from "./User";
 import { getAllUsers } from "../../api/UserServices";
 import { updateCars } from "../../api/CarServices";
-import { Modal, Button } from 'react-bootstrap';
-import { ToastContainer, toast } from "react-toastify";
 import { autogenerate } from "../../Functions";
+
+import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { AwesomeButton } from "react-awesome-button";
 import "react-awesome-button/dist/styles.css";
-
-import "./styles.css";
 import buttonStyle from "./AwesomeButtonStyles.css";
+import "./styles.css";
 
 export default function Admin ({ text }) {
     const [draggedItem, setDraggedItem] = useState(0);
     const [cars, setCars] = useState([]);
     const [users, setUsers] = useState([]);
-    const [modalDisplay, setModalDisplay] = useState("");
+    
+    const [timeOptions, setTimeOptions] = useState(["8:00AM", "13:00AM", "15:00AM"]);
+    const [locations, setLocations] = useState(["EVK", "Village", "Ellendale"]);
 
     useEffect(() => {
         document.title = "Manage Rides";
@@ -28,10 +33,10 @@ export default function Admin ({ text }) {
         // getAllUsers().then((rsp) => {
         //     setUsers(rsp);
         // });
-        let fakeUser = {
+        let fakeUser0 = {
             name: "Matthew Matsumoto",
-            email: "Fake Email",
-            phone: "Fake Phone",
+            email: "Matthew Email",
+            phone: "Matthew Phone",
             pickupLocation: "EVK",
             canDrive: false,
             id: 0,
@@ -39,8 +44,8 @@ export default function Admin ({ text }) {
 
         let fakeUser1 = {
             name: "Sarah Okamoto",
-            email: "Fake Email",
-            phone: "Fake Phone",
+            email: "Sarah Email",
+            phone: "Sarah Phone",
             pickupLocation: "Village",
             canDrive: true,
             id: 1
@@ -48,15 +53,17 @@ export default function Admin ({ text }) {
 
         let fakeUser2 = {
             name: "Christopher Ahn",
-            email: "Fake Email",
-            phone: "Fake Phone",
+            email: "Christopher Email",
+            phone: "Christopher Phone",
             pickupLocation: "Ellendale",
-            canDrive: false.valueOf,
+            canDrive: false,
             id: 2
         }
 
-        let rsp = [new User(fakeUser), new User(fakeUser1), new User(fakeUser2)];
+        let rsp = [new User(fakeUser0), new User(fakeUser1), new User(fakeUser2)];
         setUsers(rsp);
+
+        // TO DO: PULL PICKUP TIMES, PULL PICKUP LOCATIONS
     }, []);
 
     function addCar() {
@@ -137,7 +144,6 @@ export default function Admin ({ text }) {
 
         else {
             let newUsers = users.map((user) => {
-                // console.log(user);
                 const found = assigned.find(p => p.id === user.id);
                 if (found !== undefined) {
                     let newUser = _.cloneDeep(user);
@@ -150,21 +156,48 @@ export default function Admin ({ text }) {
         }
     }
 
-    const [show, setShow] = useState(false);
-    const [confirmModalIndex, setConfirmModalIndex] = useState(null);
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
-    function showModal(user, index) {
-        handleShow();
+    // CONFIRM DRIVER MODAL UTILITIES
+    const [showConfirmDriver, setShowConfirmDriver] = useState(false);
+    const [confirmDriverText, setConfirmDriverText] = useState("");
+    const [confirmModalIndex, setConfirmModalIndex] = useState(null);
+
+    const handleShowConfirmDriver = () => setShowConfirmDriver(true);
+    function showConfirmDriverModal(user, index) {
+        handleShowConfirmDriver();
         setConfirmModalIndex(index);
-        setModalDisplay(user.name + " ");
+        setConfirmDriverText(user.name + " ");
     }
     
-    function handleModalConfirm() {
-        dropDriver(confirmModalIndex);
-        handleClose();
+    
+    // DEFAULT MODAL UTILITIES
+    const [showDefaults, setShowDefaults] = useState(false);
+    const handleCloseDefaults = () => setShowDefaults(false);
+    const handleOpenDefaults = () => setShowDefaults(true);
+
+    function showDefaultModal() {
+        handleOpenDefaults();
     }
+
+    // ADD TEMPORARY USER MODAL UTILITES
+    const [showAddUser, setShowAddUser] = useState(false);
+
+    function showAddUserModal() {
+        setShowAddUser(true);
+    }
+
+    // USER PROFILE MODAL UTILITIES
+    const [showUserProfile, setShowUserProfile] = useState(false);
+
+    let fakeUser = {
+        name: "",
+        email: "Fake Email",
+        phone: "Fake Phone",
+        pickupLocation: "Ellendale",
+        canDrive: false,
+        id: -1
+    }
+    const [userProfile, setUserProfile] = useState(fakeUser);
 
 
     return (
@@ -182,35 +215,63 @@ export default function Admin ({ text }) {
                 />
 
             {/* If the user assigns a user that is not a driver, pop up a warning modal. */}
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title> </Modal.Title>
-                </Modal.Header>
-                <Modal.Body><strong>{modalDisplay} </strong>says that they are not a driver. Are you sure you want to make them drive? </Modal.Body>
-                <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="success" onClick={handleModalConfirm}>
-                    Yes
-                </Button>
-                </Modal.Footer>
-            </Modal>
+            <ConfirmDriverModal showConfirmDriver={showConfirmDriver}
+                                setShowConfirmDriver={setShowConfirmDriver}
+                                dropDriver={dropDriver}
+                                confirmDriverText={confirmDriverText}
+                                setConfirmDriverText={setConfirmDriverText}
+                                confirmModalIndex={confirmModalIndex}
+                                />
 
+            <DefaultModal   showDefaults={showDefaults} 
+                            setShowDefaults={setShowDefaults}
+                            handleCloseDefaults={handleCloseDefaults}
+                            timeOptions={timeOptions}
+                            setTimeOptions={setTimeOptions}
+                            locations={locations}
+                            setLocations={setLocations}/>
 
+            
+            <AddUserModal showAddUser={showAddUser}
+                            setShowAddUser={setShowAddUser}
+                            users={users}
+                            setUsers={setUsers}
+                            locations={locations}/>
+
+            <UserProfileModal showUserProfile={showUserProfile}
+                                setShowUserProfile={setShowUserProfile}
+                                users={users}
+                                setUsers={setUsers}
+                                user={userProfile}
+                                locations={locations}/>
+
+            
             <div id="main">
-                <Sidebar users={users} setDraggedItem={setDraggedItem} setUsers={setUsers}/>
+                <Sidebar users={users} 
+                            setDraggedItem={setDraggedItem} 
+                            setUsers={setUsers} 
+                            showAddUserModal={showAddUserModal}
+                            setShowUserProfile={setShowUserProfile}
+                            setUserProfile={setUserProfile}/>
+
                 <div className="adminEdit">
                     <div className="buttonRow">
                         <AwesomeButton type="secondary" className="special-btn" style={buttonStyle} onPress={addCar}>
                             <i className="material-icons">add</i>Add Car
                         </AwesomeButton>
+
                         <AwesomeButton type="secondary" className="special-btn" style={buttonStyle} onPress={resetCars}>
                             <i className="material-icons">refresh</i>Reset 
                         </AwesomeButton>
+
                         <AwesomeButton type="secondary" className="special-btn" style={buttonStyle} onPress={handleAutogenerate}>
-                        <i className="material-icons">bolt</i>Autogenerate 
+                            <i className="material-icons">bolt</i>Autogenerate 
                         </AwesomeButton>
+
+                        <AwesomeButton type="secondary" className="special-btn" style={buttonStyle} onPress={showDefaultModal}>
+                            <i className="material-icons default-icon">settings</i>Defaults 
+                        </AwesomeButton>
+
                         <AwesomeButton type="primary" className="special-btn" style={buttonStyle} onPress={submitCars}>
                             Submit Cars
                         </AwesomeButton>
@@ -221,8 +282,9 @@ export default function Admin ({ text }) {
                                 assign={assign} 
                                 deassign={deassign} 
                                 users={users} 
-                                showModal={showModal} 
-                                dropDriver={dropDriver}/>
+                                showModal={showConfirmDriverModal} 
+                                dropDriver={dropDriver}
+                                timeOptions={timeOptions}/>
                 </div>
             </div>
                 

@@ -4,7 +4,7 @@ import Register from "./components/register/Register";
 import Login from "./components/register/Login";
 import Header from "./components/main/Header";
 import Admin from "./components/admin/Admin";
-import Profile from "./components/profile/Profile";
+// import Profile from "./components/profile/Profile";
 import ViewRides from "./components/view/viewRides";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -38,10 +38,10 @@ function App() {
                 <ViewRides/>
               </Route>
 
-              <Route path="/profile/:id" exact={true}>
+              {/* <Route path="/profile/:id" exact={true}>
                 <Header/>
                 <Profile/>
-              </Route>
+              </Route> */}
 
               <Route path="/" exact={true}>
                 <Redirect to="/login"/> 

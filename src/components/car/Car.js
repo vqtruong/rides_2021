@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import "./styles.css";
 
-export default function Car ({ cars, setCars, index, draggedItem, deleteCar, assign, deassign, users, showModal, dropDriver, viewOnly }) {
-    const timeOptions = ["8:00AM", "13:00AM", "15:00AM"]
+export default function Car ({ cars, setCars, index, draggedItem, deleteCar, assign, deassign, users, showModal, dropDriver, viewOnly, timeOptions }) {
     
     let car = cars[index];
     const [over, setOver] = useState(false);
-    const [tableValue, setTableValue] = useState("");
-    const [pickupTime, setPickupTime] = useState(timeOptions[0]);
+    const [pickupTime, setPickupTime] = useState([]);
 
     function removeDriver() {
         if (car.driver.id === null) {
@@ -66,12 +64,12 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
             }
             return car;
         })
-        console.log(newCars);
         setCars(newCars);
     }
 
     useEffect(() => {
         car = cars[index];
+        setPickupTime(timeOptions[0]);    
     }, [index]);
 
 
@@ -85,8 +83,8 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
                             <>{car.pickupTime}</>
                         : 
                             <select className="select pickupTime" onChange={handleTableChange} value={pickupTime}>
-                                { timeOptions.map((time, index) => {
-                                    return <option>{time}</option>
+                                { timeOptions.map((time) => {
+                                    return <option className="select-option">{time}</option>
                                 })}                                
                             </select>
                     }

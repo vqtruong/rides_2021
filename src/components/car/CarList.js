@@ -1,9 +1,8 @@
 import React from "react";
 import Car from "./Car";
-import User from "../admin/User"
 import "./styles.css";
 
-export default function CarList ({ cars, setCars, draggedItem, assign, deassign, users, showModal, dropDriver, viewOnly }) {
+export default function CarList ({ cars, setCars, draggedItem, assign, deassign, users, showModal, dropDriver, viewOnly, timeOptions }) {
     function deleteCar(index) {
         let newCars = cars.filter((car, i) => {
             return index !== i;
@@ -27,6 +26,7 @@ export default function CarList ({ cars, setCars, draggedItem, assign, deassign,
                             showModal={showModal}
                             dropDriver={dropDriver}
                             viewOnly={viewOnly}
+                            timeOptions={timeOptions}
                         />
             })}
         </div>

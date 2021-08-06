@@ -93,16 +93,24 @@
 }
 
 .pickupTime {
-    width: 40%;
     min-width: 100px;
     font-family: 'Raleway', sans-serif;
     font-weight: 500;
 }
 
-select {
-    border: none;
+.car select {
+    border: 2px solid #ffd4d4;
+    padding-left: 5px;
+    padding-right: 5px;
     background-color: inherit;
+    box-sizing: border-box;
+    text-align: right;
 }
+
+.select-option {
+    text-align: right;
+}
+
 
 .driverName {
     width: 100%;

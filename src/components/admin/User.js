@@ -7,6 +7,7 @@ export default class User {
         this.pickupLocation = user.pickupLocation;
         this.assigned = user.assigned;
         this.canDrive = user.canDrive;
+        user.temporaryUser === undefined ? this.temporaryUser = false : this.temporaryUser = true;
     }
 
     reset() {

@@ -40,7 +40,7 @@ export function autogenerate(users, setCars, assign) {
     const emptyJSON = {
         "id": null,
         "name": "None",
-        "phone": "None",
+        "phone": "-",
         "pickupLocation": null,
         "assigned": false,
         "canDrive": false,
@@ -154,18 +154,6 @@ export function autogenerate(users, setCars, assign) {
             }
         }
     }
-
-    // for (let i = 0; i < finalCars.length; i++) {
-    //     let str = "CAR " + i + ": ";
-    //     for (let j = 0; j < 4; j++) {
-    //         if (finalCars[i].passengers[j] !== null) {
-    //             str += JSON.parse(JSON.stringify(finalCars[i].passengers[j].pickupLocation));
-    //             if (j != 3) {
-    //                 str += ", ";
-    //             }
-    //         }
-    //     }
-    // }
 
     for (let i = 0; i < finalCars.length; i++) {
         finalCars[i].car_id = i;

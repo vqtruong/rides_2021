@@ -49,7 +49,6 @@ export default function Register () {
         }
 
         if (email.trim().length === 0 || !email.includes('@')) {
-            console.log("")
             setEmailError(true);
             setTimeout(() => { setEmailError(false) }, 3000);
             valid = false;
