@@ -1,4 +1,5 @@
 import User from "../components/admin/User";
+import http from "./http-common.js";
 
 export function getUserByID(id) {
     return fetch(`/api/users/${id}`, {
@@ -13,19 +14,9 @@ export function getUserByID(id) {
     })
 }
 
-export function getAllUsers() {
-    return fetch("/api/users", {
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-    })
-    .then((response) => response.json())
-    .then((response) => {
-        let newUsers = response.map((u) => {
-            return new User(u);
-        })
-        return newUsers;
+export async function getAllUsers() {
+    return http.get(`users/`).then((rsp) => {
+        return rsp.data.usersList;
     });
 }
 
@@ -35,24 +26,14 @@ export function addUser(user) {
         email: user.email,
         phone: user.phone,
         pickupLocation: user.pickupLocation,
-        canDrive: user.canDrive
+        canDrive: user.canDrive,
+        isTemporaryUser: user.temporaryUser
     }
 
-
-    return fetch("/api/users", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-    })
-    .then((response) => response.json())
-    .then((response) => {
-        return response;
-    })
+    return http.post(`users`, data);
 }
 
+// TO DO: Optimize this to do it all backend instead of front end
 export async function userExists(user) {
     let allUsers = await getAllUsers();
     for (let i = 0; i < allUsers.length; i++) {
@@ -62,12 +43,8 @@ export async function userExists(user) {
         }
     }
     return false;
-
-
 }
 
 export function deleteUserByID(id) {
-    return fetch(`/api/users/${id}`, {
-        method: "delete",
-    })
+    return http.delete(`users/`, {data: {ID: id}});
 }

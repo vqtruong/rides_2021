@@ -21,9 +21,8 @@
 }
 
 #sidebar {
-    width: 20%;
     margin-right: 5%;
-    max-width: 300px;
+    width: 20%;
 }
 
 .addUser {
@@ -68,7 +67,17 @@ h2.sidebarHeader {
     color: rgb(73, 73, 73);
 }
 
+.hide {
+    display: none;
+}
 
+.dropRightMenu {
+    position: absolute;
+    left: 23%;
+    border: 1px solid black;
+    background-color: rgb(255, 17, 17);
+    border-radius: 5px;
+}
 
 .dragged {
     opacity: 0.5;
@@ -151,16 +160,43 @@ h2.sidebarHeader {
     margin: 10px;
 }
 
+.drag-indicator {
+    width: 14%;
+}
+
 .listEntry {
     cursor: pointer;
     padding: 10px;
     padding-left: 20px;
     margin: 5px;
     border-radius: 3px;
-    width: 200px;
-    display: flex;
-    justify-content: space-between;
+    width: 250px;
     font-family: 'Lato', sans-serif;
+    display: flex;
+}
+
+.rightListEntry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    /* padding-left: 5px; */
+    width: 66%;
+}
+
+.listEntryText {
+    /* padding-left: 32px; */
+}
+
+.clearTime {
+    color: #aa0e23;
+    opacity: 0;
+    /* width: 100%; */
+    height: 100%;
+    width: 20%;
+}
+
+.clearTime:hover {
+    opacity: 1;
 }
 
 .addUserForm {
@@ -250,13 +286,118 @@ select.prefilledData {
     width: 90%;
     cursor: pointer;
     -webkit-appearance: none; 
-
-  
 }
 
 #sidebar select:hover {
     /* background-color: rgb(252, 252, 252); */
     opacity: 0.7;
+}
+
+.userProfileName {
+    color: #990000;
+}
+
+.mobile-only {
+    display: none;
+}
+
+.view-only {
+    display: none;
+}
+
+.userSelectedBox {
+    display: none;
+}
+
+@media (max-width: 576px) {
+    .mobile-only {
+        display: initial;
+        width: 100%;
+    }
+
+    .not-desktop {
+        display: none;
+    }
+
+    #main {
+        width: 100%;
+        flex-wrap: wrap;
+        margin: 0;
+    }
+
+    #sidebar {
+        width: 100%;
+        padding-left: 5%;
+        padding-right: 5%;
+        margin: 0;
+        margin-bottom: 20px;
+    }
+
+    h2.sidebarHeader {
+        font-size: 25px;
+    }
+
+    #sidebar select {
+        font-size: 17px;
+    }
+
+    .addUser {
+        font-size: 24px;
+    }
+
+    .buttonRow {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;    
+    }
+
+    .sidebarEntry:hover {
+        background-color: inherit;
+        color: inherit;
+    }
+
+    .leftUserEntry {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebarEntryName {
+        width: 200px;
+    }
+
+    .userSelectedBox {
+        display: block;
+        width: 15px;
+        height: 15px;
+        border-radius: 4px;
+        background-color: rgb(148, 148, 148);
+        margin: 0;
+        margin-right: 8px;
+    }
+
+    .userSelected {
+        background-color: rgb(221, 169, 0);
+    }
+
+    .buttonRow button {
+        margin: 5px;
+    }
+
+    .special-btn {
+        margin: 0;
+        width: 40%;
+        
+    }
+
+    .sidebarEntry {
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+    .adminEdit {
+        width: 100%;
+    }
 }
 
 

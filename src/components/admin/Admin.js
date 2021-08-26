@@ -10,6 +10,7 @@ import Car from "./Car";
 import User from "./User";
 import { getAllUsers } from "../../api/UserServices";
 import { updateCars } from "../../api/CarServices";
+import { getAllTimes } from "../../api/TimeServices";
 import { autogenerate } from "../../Functions";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -24,53 +25,28 @@ export default function Admin ({ text }) {
     const [cars, setCars] = useState([]);
     const [users, setUsers] = useState([]);
     
-    const [timeOptions, setTimeOptions] = useState(["8:00AM", "13:00AM", "15:00AM"]);
+    const [timeOptions, setTimeOptions] = useState([]);
     const [locations, setLocations] = useState(["EVK", "Village", "Ellendale"]);
 
     useEffect(() => {
         document.title = "Manage Rides";
 
-        // getAllUsers().then((rsp) => {
-        //     setUsers(rsp);
-        // });
-        let fakeUser0 = {
-            name: "Matthew Matsumoto",
-            email: "Matthew Email",
-            phone: "Matthew Phone",
-            pickupLocation: "EVK",
-            canDrive: false,
-            id: 0,
-        }
+        getAllUsers().then((rsp) => {
+            setUsers(rsp.map((u) => {
+                return new User(u);
+            }));  
+        });
 
-        let fakeUser1 = {
-            name: "Sarah Okamoto",
-            email: "Sarah Email",
-            phone: "Sarah Phone",
-            pickupLocation: "Village",
-            canDrive: true,
-            id: 1
-        }
-
-        let fakeUser2 = {
-            name: "Christopher Ahn",
-            email: "Christopher Email",
-            phone: "Christopher Phone",
-            pickupLocation: "Ellendale",
-            canDrive: false,
-            id: 2
-        }
-
-        let rsp = [new User(fakeUser0), new User(fakeUser1), new User(fakeUser2)];
-        setUsers(rsp);
-
-        // TO DO: PULL PICKUP TIMES, PULL PICKUP LOCATIONS
+        getAllTimes().then((rsp) => {
+            setTimeOptions(rsp);
+        })
     }, []);
 
     function addCar() {
         const emptyJSON = {
-            "id": null,
+            "ID": null,
             "name": "None",
-            "phone": "-",
+            "phone": " - ",
             "pickupLocation": null,
             "assigned": false,
             "canDrive": false,
@@ -199,6 +175,24 @@ export default function Admin ({ text }) {
     }
     const [userProfile, setUserProfile] = useState(fakeUser);
 
+    function handleTest() {
+        const rsp = getAllUsers().then((rsp) => {
+            console.table(rsp);
+            const newUsers = rsp.map((user) => {
+                return new User({
+                    name: user.name, 
+                    phone: user.phone,
+                    email: user.email,
+                    id: user.id,
+                    pickupLocation: user.pickupLocation,
+                    assigned: false,
+                    canDriver: user.canDrive
+                })
+            })
+            setUsers(newUsers);
+        });
+    }
+
 
     return (
         <>
@@ -274,6 +268,10 @@ export default function Admin ({ text }) {
 
                         <AwesomeButton type="primary" className="special-btn" style={buttonStyle} onPress={submitCars}>
                             Submit Cars
+                        </AwesomeButton>
+
+                        <AwesomeButton type="primary" className="special-btn" style={buttonStyle} onPress={handleTest}>
+                            Test
                         </AwesomeButton>
                     </div>
                     <CarList cars={cars} 

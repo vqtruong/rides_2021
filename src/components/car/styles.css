@@ -89,7 +89,7 @@
 .pickupLocation {
     width: 100%;
     font-family: 'Raleway', sans-serif;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .pickupTime {
@@ -146,6 +146,8 @@
     margin-bottom: 10px;
     width: 100%;
     cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
 }
 
 .passengerEntry:hover {
@@ -219,6 +221,77 @@
     color: rgb(184, 1, 1);
 }
 
+.mobile-only {
+    display: none;
+}
+
 .view-only {
     display: none;
+}
+
+@media (max-width: 576px) {   
+    .mobile-only {
+        display: initial;
+        width: 100%;
+    }
+
+    .not-desktop {
+        display: none;
+    }
+
+    .carList {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .car {
+        margin: 0;
+        margin-bottom: 20px;
+        width: 90%;
+        padding: 25px;
+        padding-bottom: 10px;
+    }
+
+    .carHeaderMobile {
+        display: flex; 
+        flex-wrap: wrap;
+    }
+
+    .headerRow {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .driverDetails {
+        width: 65%;
+    }
+
+    .driverName {
+        text-align: left;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .car select {
+        font-size: 15px;
+    }
+
+    .driverPhone {
+        text-align: left;
+        font-size: 14px;
+        padding: 0;
+    }
+
+    .pickupLocation {
+        text-align: right;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .passengers {
+        width: 100%;
+    }
+
 }

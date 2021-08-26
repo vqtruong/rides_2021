@@ -12,7 +12,7 @@ export default class Car {
     getPickupLocations() {
         let str = "";
         if (this.pickupLocations.length === 0) {
-            return "None";
+            return "-";
         }
         for (let i = 0; i < this.pickupLocations.length; i++) {
             if (i !== this.pickupLocations.length - 1) {

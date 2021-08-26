@@ -66,9 +66,7 @@
 
 .buttonRow {
     width: 100%;
-    /* max-width: 500px; */
     display: flex;
-    /* justify-content: space-between; */
     margin-bottom: 30px;
 }
 
@@ -85,7 +83,37 @@ a:hover {
     color: white;
 }
 
+@media (max-width: 576px) {
+    .contents {
+        width: 100%;
+    }
 
+    .header {
+        flex-wrap: wrap;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .header h1 {
+        width: 100%;
+        font-size: 40px;
+        text-align: center;
+    }
+
+    .header ul {
+        justify-content: center;
+    }
+
+    .navBarList {
+        width: 100%;
+        
+    }
+
+    .navBarOption {
+        font-size: 18px;
+    }
+
+}
 
 
 *:focus {

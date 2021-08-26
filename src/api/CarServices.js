@@ -1,4 +1,9 @@
 import Car from "../components/admin/Car";
+import http from "./http-common.js";
+
+// export async function getAllCars() {
+
+// }
 
 // To update the car, delete all the cars and add the new ones
 export async function updateCars(cars) {

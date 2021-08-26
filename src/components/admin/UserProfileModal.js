@@ -61,7 +61,7 @@ export default function UserProfile({showUserProfile, setShowUserProfile, users,
     return <>
         <Modal show={showUserProfile} onHide={handleCloseUserProfile} >
             <Modal.Header closeButton>
-                <Modal.Title> {user.name}  </Modal.Title>
+                <Modal.Title className="modalTitle"> <span className="userProfileName">{user.name}</span> Profile </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
@@ -84,12 +84,12 @@ export default function UserProfile({showUserProfile, setShowUserProfile, users,
 
                         <div className="form-group">
                             <div><label htmlFor="name">Pickup Locations</label></div>
-                            <select className="select pickupTime" onChange={handleLocationChange}>
+                            <select className="select pickupTime" onChange={handleLocationChange} value={pickupLocation}>
                                     { locations.map((time) => {
                                         return <option className="select-option">{time}</option>
                                     })}                                
                             </select>
-                        </div>
+                        </div>  
 
                         <div className="form-group">
                             <div className="form-check noSelect" id="formCanDrive">

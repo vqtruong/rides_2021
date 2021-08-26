@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button } from 'react-bootstrap';
 import User from "./User";
+import { addUser } from "../../api/UserServices.js";
 import "./styles.css";
 
 export default function AddUserModal({showAddUser, setShowAddUser, users, setUsers, locations}) {
@@ -9,16 +10,24 @@ export default function AddUserModal({showAddUser, setShowAddUser, users, setUse
     function handleAddUserModalSubmit(event) {
         event.preventDefault();
         const userJSON = {
-            "id": users.length,
             "name": name,
+            "email": email,
             "phone": phone,
             "pickupLocation": pickupLocation,
             "assigned": false,
             "canDrive": canDrive,
+            "isTemporaryUser": true
         }
-        const newUsers = users.concat(new User(userJSON));
-        setUsers(newUsers);
-        handleCloseAddUser();
+
+        addUser(userJSON).then((rsp) => {
+            userJSON.ID = rsp.data._id;
+            setUsers(users.concat(new User(userJSON)));
+            handleCloseAddUser();
+        });
+        
+        
+        
+        
     }
 
     const [name, setName] = useState(""); 

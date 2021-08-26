@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Collapse } from 'react-bootstrap';
 import List from 'react-smooth-draggable-list';
+import { addTime } from "../../api/TimeServices";
 import "./styles.css";
 
 export default function DefaultModal({showDefaults, setShowDefaults, handleCloseDefaults, timeOptions, setTimeOptions, locations, setLocations}) {
@@ -20,11 +21,21 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
     function handleAddTime(event) {
         event.preventDefault(); 
         if (addTimeText !== "") { 
-            setTempTimeIndexes(tempTimeIndexes.concat(setTimeOptions.length)); 
-            setTimeOptions(timeOptions.concat(addTimeText));
+            const newID = addTime({name: addTimeText, order: timeOptions.length});
+            setTimeOptions(timeOptions.concat({name: addTimeText, order: timeOptions.length, _id: newID}));
+            setTempTimeIndexes(tempTimeIndexes.concat(timeOptions.length)); 
             setAddTimeText("");
         }
     }
+
+    function handleDeleteTime(id) {
+        const newTimeOptions = timeOptions.filter((time) => {
+            return time._id != id;
+        });
+        console.log(newTimeOptions);
+        setTimeOptions(newTimeOptions)
+    }
+    
 
     // FOR LOCATIONS
     const [showPickups, setShowPickups] = useState(false);
@@ -61,7 +72,7 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
     function handleModalSubmit() {
         handleClose();
         setTempTimeIndexes(timeOptions.map((option, index) => { return index; }));
-        setTimeOptions(tempTimeIndexes.map((index) => { return timeOptions[index]; }));
+        setTimeOptions(tempTimeIndexes.map((index) => { return timeOptions[index].name; }));
         setLocations(tempLocationIndexes.map((index) => { return locations[index]; }));
         setTempLocationIndexes(locations.map((option, index) => { return index; }));
     }
@@ -76,6 +87,8 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
             return index;
         })
         setTempLocationIndexes(newTempLocationIndexes); 
+
+        console.log(timeOptions);
     }, [timeOptions]);
 
     return <Modal show={showDefaults} onHide={handleCloseDefaults}>
@@ -109,19 +122,23 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
                                         onChange={handleTimeChange}/>
                             </div>
                         </form>
-                        <List rowHeight={30} rowWidth={800} onReOrder={handleOnTimeReorder} className="timeList">
-                                
-                                
-                        { timeOptions.map(time => 
-                            <List.Item> 
-                                <div className="listEntry">
-                                    <span >{time}</span> 
-                                    <i className="material-icons hover-only">drag_indicator</i> 
-                                </div>
-                                    
-                            </List.Item>
-                        )}
-                        </List>
+                        <div>
+                            <List rowHeight={30} rowWidth={800} onReOrder={handleOnTimeReorder} className="">  
+                                  
+                                { timeOptions.map(time => 
+                                    <List.Item>
+                                        <div className="listEntry">
+                                            <i className="material-icons hover-only drag-indicator">drag_indicator</i>  
+                                            <span className="rightListEntry">
+                                                <span className="listEntryText">{time.name}</span> 
+                                                <i className="material-icons clearTime" onClick={() => { handleDeleteTime(time._id)} }>clear</i>
+                                            </span> 
+                                                
+                                        </div>
+                                    </List.Item>
+                                )}
+                            </List>
+                        </div>
                     </div>
                 </Collapse>
             </div>
@@ -180,3 +197,19 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
         </Modal.Footer>
     </Modal>
 }
+
+// function ListOption({time}) {
+//     function handleDeleteTime(event) {
+//         event.preventDefault();
+//     }
+
+//     useEffect(() => {
+//     }, [])
+
+//     return <List.Item> 
+//         <div className="listEntry">
+//             <i className="material-icons clearTime" onClick={handleDeleteTime}>clear</i> 
+//             <span className="listEntryText">{time.name}</span> 
+//         </div>
+//     </List.Item>
+// }

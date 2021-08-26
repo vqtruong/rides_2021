@@ -5,6 +5,7 @@ import "./styles.css";
 
 export default function Sidebar ({ users, setUsers, setDraggedItem, showAddUserModal, showUserProfile, setShowUserProfile, setUserProfile }) {
     useEffect(() => {
+        
     }, [users])
 
     const [sortUser, setSortUser] = useState("Sort By: Date Added");
@@ -52,11 +53,11 @@ export default function Sidebar ({ users, setUsers, setDraggedItem, showAddUserM
         }
     }
 
-    function handleDeleteUser(id) {
+    function handleDeleteUser(ID) {
         let newUsers = users.filter((user) => {
-            return id !== user.id;
+            return ID !== user.ID;
         });
-        deleteUserByID(id);
+        deleteUserByID(ID);
         setUsers(newUsers);
     }
 
@@ -67,7 +68,7 @@ export default function Sidebar ({ users, setUsers, setDraggedItem, showAddUserM
                 <i className="material-icons addUser" onClick={showAddUserModal}>add</i> 
             </div>
 
-            <select className="sortUserSelect" value={sortUser} onChange={handleChangeSort}>
+            <select value={sortUser} onChange={handleChangeSort}>
                 <option>Sort By: Name</option>
                 <option>Sort By: Pickup Location</option>
                 <option selected>Sort By: Date Added</option>
@@ -89,6 +90,7 @@ export default function Sidebar ({ users, setUsers, setDraggedItem, showAddUserM
 
 function SidebarEntry ({ user, setDraggedItem, handleDeleteUser, setShowUserProfile, setUserProfile }) {
     const [dragging, setDragging] = useState(false);
+    const [tapped, setTapped] = useState(false);
 
     function handleDragStart(e) {
         setDraggedItem(user);
@@ -104,11 +106,23 @@ function SidebarEntry ({ user, setDraggedItem, handleDeleteUser, setShowUserProf
         setShowUserProfile(true);
     }
 
+    function entryClicked() {
+        setTapped(!tapped);
+    }
+
     return (
-        <div className={`sidebarEntry ${dragging ? "dragged" : ""} ${user.assigned ? "assigned" : ""}`} draggable={!user.assigned} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-            <div className="sidebarEntryName">
-                {user.name}
-            </div>
+        <div className={`sidebarEntry ${dragging ? "dragged" : ""} ${user.assigned ? "assigned" : ""}`} 
+                draggable={!user.assigned} 
+                onDragStart={handleDragStart} 
+                onDragEnd={handleDragEnd}>
+            <span className="leftUserEntry" onClick={entryClicked}>
+                <span className={`${tapped ? "userSelectedBox userSelected" : "userSelectedBox"}`}></span>
+                <div className="sidebarEntryName">
+                    {user.name}
+                </div>
+            </span>
+                
+            
             
             <DropdownButton
                     as={ButtonGroup}
@@ -124,12 +138,20 @@ function SidebarEntry ({ user, setDraggedItem, handleDeleteUser, setShowUserProf
                 </Dropdown.Item>
 
                 <Dropdown.Item eventKey="2">
-                    <div className="dropdownItem" onClick={() => { handleDeleteUser(user.id); }} >
+                    <div className="dropdownItem" onClick={() => { handleDeleteUser(user.ID); }} >
                         <i className="material-icons remove-icon">delete</i>Delete
                     </div>
                 </Dropdown.Item>
                 <Dropdown.Divider />
             </DropdownButton>
+
         </div>
     )
 }
+
+{/* <i className="material-icons">chevron_right</i> 
+            <div className={showDropRight ? "dropRightMenu" : "hide"}>
+                <li>Profile</li>
+                <li>Delete</li>
+            </div>  */}
+

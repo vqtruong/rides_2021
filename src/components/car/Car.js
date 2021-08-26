@@ -69,28 +69,28 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
 
     useEffect(() => {
         car = cars[index];
-        setPickupTime(timeOptions[0]);    
+        setPickupTime(timeOptions[0].name);    
     }, [index]);
 
 
     return (
         <div className="car" > 
             <div className={over ? "carHeader over" : "carHeader"} >
-                <div className="pickupLocation"> {car.getPickupLocations()} </div>
-                <div className="pickupTime">
+                <div className="pickupLocation not-desktop"> {car.getPickupLocations()} </div>
+                <div className="pickupTime not-desktop">
                     {viewOnly 
                         ? 
                             <>{car.pickupTime}</>
                         : 
                             <select className="select pickupTime" onChange={handleTableChange} value={pickupTime}>
                                 { timeOptions.map((time) => {
-                                    return <option className="select-option">{time}</option>
+                                    return <option className="select-option">{time.name}</option>
                                 })}                                
                             </select>
                     }
                 </div>
 
-                <div className="relative">
+                <div className="relative not-desktop">
                     <div className="driverDetails">
                         <h3 className="driverName"> {car.driver.name} </h3>
                         <h4 className="driverPhone">{car.driver.phone}</h4>
@@ -102,13 +102,36 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
                         onDragOver={handleDriverOnDragOver} 
                         onDragLeave={handleDriverDragLeave}
                         onDragExit={handleDriverDragLeave}>
+                    </div>
+                </div>
+            
+                <div className="mobile-only">
+                    <div className="carHeaderMobile">
+                        <div className="headerRow">
+                            <h3 className="driverName"> {car.driver.name} </h3>
+                            <div className="pickupTime">
+                                {viewOnly 
+                                    ? 
+                                        <>{car.pickupTime}</>
+                                    : 
+                                        <select className="select pickupTime" onChange={handleTableChange} value={pickupTime}>
+                                            { timeOptions.map((time) => {
+                                                return <option className="select-option">{time.name}</option>
+                                            })}                                
+                                        </select>
+                                }
+                            </div>
+                        </div>
 
+                        <div className="headerRow">
+                            <h4 className="driverPhone">{car.driver.phone}</h4>
+                            <div className="pickupLocation"> {car.getPickupLocations()} </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
                 
-            
             <div className="passengers">
                 { car.passengers.map((passenger, passengerIndex) => {
                     return <Passenger 
@@ -188,6 +211,5 @@ function Passenger ({ passenger, draggedItem, cars, setCars, passengerIndex, car
                 </div>
             </div>
         </div>
-        
     )
 }
