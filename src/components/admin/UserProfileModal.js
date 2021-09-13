@@ -3,6 +3,8 @@ import { Modal, Button } from 'react-bootstrap';
 import _ from "lodash";
 import "./styles.css";
 
+import { updateUser } from './../../api/UserServices';
+
 export default function UserProfile({showUserProfile, setShowUserProfile, users, setUsers, user, locations}) {
     const handleCloseUserProfile = () => setShowUserProfile(false);
         
@@ -11,6 +13,7 @@ export default function UserProfile({showUserProfile, setShowUserProfile, users,
     const [phone, setPhone] = useState(user.phone);
     const [pickupLocation, setPickupLocation] = useState(user.pickupLocation);
     const [canDrive, setCanDrive] = useState(user.canDrive);
+    const [capacity, setCapacity] = useState(user.capacity);
 
     function handleNameChange(event) {
         setName(event.target.value);
@@ -30,18 +33,26 @@ export default function UserProfile({showUserProfile, setShowUserProfile, users,
 
     function handleCanDriveChange(event) {
         setCanDrive(event.target.checked);
+        if (event.target.checked) setCapacity(4);
+        else setCapacity();
+    }
+
+    function handleCapacityChange(event) {
+        setCapacity(parseInt(event.target.value));
     }
 
     function handleUserProfileSubmit(event) {
         event.preventDefault();
         let newUsers = users.map((u) => {
-            if (u.id === user.id) {
+            if (u.ID === user.ID) {
                 let newUser = _.cloneDeep(user);
                 newUser.name = name;
                 newUser.email = email;
                 newUser.phone = phone;
                 newUser.pickupLocation = pickupLocation;
                 newUser.canDrive = canDrive;
+                newUser.capacity = capacity;
+                updateUser(newUser);
                 return newUser;
             }
             return u;
@@ -86,7 +97,7 @@ export default function UserProfile({showUserProfile, setShowUserProfile, users,
                             <div><label htmlFor="name">Pickup Locations</label></div>
                             <select className="select pickupTime" onChange={handleLocationChange} value={pickupLocation}>
                                     { locations.map((time) => {
-                                        return <option className="select-option">{time}</option>
+                                        return <option className="select-option">{time.name}</option>
                                     })}                                
                             </select>
                         </div>  
@@ -96,6 +107,11 @@ export default function UserProfile({showUserProfile, setShowUserProfile, users,
                                 <input id="defaultCheck0" className="form-check-input " type="checkbox" checked={canDrive} onChange={handleCanDriveChange} ></input>
                                 <label id="defaultCheck1" className="form-check-label" htmlFor="defaultCheck0" > Are you able to drive? </label>
                             </div>  
+                        </div>
+
+                        <div className="form-group">
+                            <div><label htmlFor="name">If you can drive, how many can you take?</label></div>
+                            <input type="number" min="0" value={capacity} onChange={handleCapacityChange} disabled={!canDrive}></input>
                         </div>
                     </div>
                 </form>

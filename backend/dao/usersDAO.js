@@ -46,7 +46,7 @@ export default class UsersDAO {
         }
     }
 
-    static async addUser({name, dateCreated, pickupLocation, phone, email, canDrive, isTemporaryUser}) {
+    static async addUser({name, dateCreated, pickupLocation, phone, email, canDrive, isTemporaryUser, assigned, capacity}) {
         try {
             const newUser = {
                 date: dateCreated,
@@ -55,7 +55,9 @@ export default class UsersDAO {
                 phone: phone, 
                 email: email,
                 canDrive: canDrive,
-                isTemporaryUser: isTemporaryUser
+                isTemporaryUser: isTemporaryUser,
+                assigned: assigned,
+                capacity: capacity
             }
             return await users.insertOne(newUser);
         } catch (e) {
@@ -66,12 +68,20 @@ export default class UsersDAO {
 
     static async updateUser(userInfo) {
         try {
-            const { ID, name, pickupLocation, phone, email, canDrive, isTemporaryUser } = userInfo;
+            const { ID, name, pickupLocation, phone, email, canDrive, isTemporaryUser, assigned, capacity } = userInfo;
+            
             const updateResponse = await users.updateOne(
                 { _id: ObjectID(ID) },
-                { $set: { name: name, pickupLocation: pickupLocation, phone, email, canDrive, isTemporaryUser }}
-                
+                { $set: { name: name, 
+                            pickupLocation: pickupLocation, 
+                            phone: phone, 
+                            email: email, 
+                            canDrive: canDrive, 
+                            isTemporaryUser: isTemporaryUser, 
+                            assigned: assigned,
+                            capacity: capacity }}
             )
+
             return updateResponse;
         } catch (e) {
             console.error(`Unable to update user: ${e}`);

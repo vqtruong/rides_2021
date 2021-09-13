@@ -19,7 +19,6 @@ export default class PickupTimesDAO {
     }
 
     static async getPickupTimes() {
-
         let results;
         try {
             results = await pickupTimes.find().sort({ "order": 1 });

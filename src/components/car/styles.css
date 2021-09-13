@@ -52,6 +52,16 @@
     cursor: pointer;
 }
 
+.changeCapacity {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.add-icon {
+    color: rgb(0, 107, 0);
+}
+
 .driverDetails {
     width: 100%;
 }

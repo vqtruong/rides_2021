@@ -1,17 +1,10 @@
-import User from "../components/admin/User";
 import http from "./http-common.js";
 
-export function getUserByID(id) {
-    return fetch(`/api/users/${id}`, {
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-    })
-    .then((response) => response.json())
-    .then((response) => {
-        return new User(response);
-    })
+export async function getUserByID(id) {
+    let data = {
+        ID: id
+    }
+    return http.get(`users/`, data);
 }
 
 export async function getAllUsers() {
@@ -27,9 +20,10 @@ export function addUser(user) {
         phone: user.phone,
         pickupLocation: user.pickupLocation,
         canDrive: user.canDrive,
-        isTemporaryUser: user.temporaryUser
+        isTemporaryUser: user.temporaryUser,
+        assigned: user.assigned,
+        capacity: user.capacity
     }
-
     return http.post(`users`, data);
 }
 
@@ -38,13 +32,22 @@ export async function userExists(user) {
     let allUsers = await getAllUsers();
     for (let i = 0; i < allUsers.length; i++) {
         let current = allUsers[i];
-        if (current.name === user.name && current.email === user.email && current.phone === user.phone) {
+        if (current.name === user.name && current.email === user.email && current.phone === user.phone) 
             return true;
-        }
     }
     return false;
 }
 
 export function deleteUserByID(id) {
     return http.delete(`users/`, {data: {ID: id}});
+}
+
+export function updateUser(user) {
+    http.put('users/', {data: user});
+}
+
+export function updateUsers(users) {
+    users.forEach(user => {
+        http.put('users/', {data: user});
+    });
 }

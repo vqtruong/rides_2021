@@ -18,8 +18,8 @@ export default class PickupTimesCtrl {
                 order: order
             }            
 
-            await PickupTimesDAO.addPickupTimes(pickupTimeInfo);
-            res.json({status: "Success!"});
+            const postResponse = await PickupTimesDAO.addPickupTimes(pickupTimeInfo);
+            res.json({status: "Success!", _id: postResponse.insertedId});
         } catch (e) {
             res.status(500).json({error: e.message});
         }

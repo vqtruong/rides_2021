@@ -10,12 +10,14 @@ export default function ViewRides () {
     useEffect(() => {
         document.title = "View Rides";
         getAllCars().then((rsp) => {
-            setCars(rsp);
-        })
+            Promise.all(rsp).then((result) => {
+                setCars(result);
+            })
+        });
     }, [])
 
     return (
-        <div className="">
+        <div id="main">
             <CarList cars={cars} setCars={setCars} viewOnly={true}/>
         </div>
     )

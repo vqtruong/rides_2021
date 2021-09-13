@@ -4,7 +4,7 @@ import User from "./User";
 import { addUser } from "../../api/UserServices.js";
 import "./styles.css";
 
-export default function AddUserModal({showAddUser, setShowAddUser, users, setUsers, locations}) {
+export default function AddUserModal({showAddUser, setShowAddUser, users, setUsers, locations, pickupLocation, setPickupLocation}) {
     const handleCloseAddUser = () => setShowAddUser(false);
 
     function handleAddUserModalSubmit(event) {
@@ -16,25 +16,28 @@ export default function AddUserModal({showAddUser, setShowAddUser, users, setUse
             "pickupLocation": pickupLocation,
             "assigned": false,
             "canDrive": canDrive,
-            "isTemporaryUser": true
+            "isTemporaryUser": true,
+            "capacity": capacity
         }
 
         addUser(userJSON).then((rsp) => {
             userJSON.ID = rsp.data._id;
             setUsers(users.concat(new User(userJSON)));
-            handleCloseAddUser();
         });
         
-        
-        
-        
+        handleCloseAddUser();
+        setName("");
+        setEmail("");
+        setPhone("");
+        setPickupLocation(locations[0].name);
+        setCanDrive(false);
     }
 
     const [name, setName] = useState(""); 
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
-    const [pickupLocation, setPickupLocation] = useState(locations[0]);
     const [canDrive, setCanDrive] = useState(false);
+    const [capacity, setCapacity] = useState();
 
     function handleNameChange(event) {
         setName(event.target.value);
@@ -54,6 +57,12 @@ export default function AddUserModal({showAddUser, setShowAddUser, users, setUse
 
     function handleCanDriveChange(event) {
         setCanDrive(event.target.checked);
+        if (event.target.checked) setCapacity(4);
+        else setCapacity();
+    }
+
+    function handleCapacityChange(event) {
+        setCapacity(parseInt(event.target.value));
     }
 
 
@@ -67,7 +76,7 @@ export default function AddUserModal({showAddUser, setShowAddUser, users, setUse
                 <div className="center">
                     <div className="form-group">
                         <div><label htmlFor="name">Full Name</label></div>   
-                        <input type="name" className="" value={name} onChange={handleNameChange} id="name" placeholder="Enter your name..."/>
+                        <input type="name" className="" value={name} onChange={handleNameChange} id="name" placeholder="Enter your name..." autoFocus/>
                     </div>
 
                     <div className="form-group">
@@ -83,8 +92,8 @@ export default function AddUserModal({showAddUser, setShowAddUser, users, setUse
                     <div className="form-group">
                         <div><label htmlFor="name">Pickup Locations</label></div>
                         <select className="select pickupTime" onChange={handleLocationChange}>
-                                { locations.map((time) => {
-                                    return <option className="select-option">{time}</option>
+                                { locations.map((location) => {
+                                    return <option className="select-option">{location.name}</option>
                                 })}                                
                         </select>
                     </div>
@@ -94,6 +103,11 @@ export default function AddUserModal({showAddUser, setShowAddUser, users, setUse
                             <input id="defaultCheck0" className="form-check-input " type="checkbox" checked={canDrive} onChange={handleCanDriveChange} ></input>
                             <label id="defaultCheck1" className="form-check-label" htmlFor="defaultCheck0" > Are you able to drive? </label>
                         </div>  
+                    </div>
+
+                    <div className="form-group">
+                        <div><label htmlFor="name">If you can drive, how many can you take?</label></div>
+                        <input type="number" min="0" value={capacity} onChange={handleCapacityChange} disabled={!canDrive}></input>
                     </div>
                 </div>
             </form>

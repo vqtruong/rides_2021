@@ -3,7 +3,6 @@ import CarsDAO from "../dao/carsDAO.js";
 export default class CarsCtrl {
     static async apiGetCars(req, res, next) {
         const { carsList } = await CarsDAO.getCars();
-
         let response = {
             carsList : carsList,
         }
@@ -19,8 +18,8 @@ export default class CarsCtrl {
                 driver_id: driver_id,
                 passengers: passengers,
                 capacity: capacity
-            }            
-
+            }
+            
             const carResponse = await CarsDAO.addCar(carInfo);
             res.json({status: "Success!"});
         } catch (e) {

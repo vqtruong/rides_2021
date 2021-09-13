@@ -2,14 +2,45 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import "./styles.css";
 
-export default function Car ({ cars, setCars, index, draggedItem, deleteCar, assign, deassign, users, showModal, dropDriver, viewOnly, timeOptions }) {
+export default function Car ({ cars, setCars, index, draggedItem, deleteCar, assign, deassign, showModal, dropDriver, viewOnly, timeOptions }) {
     
     let car = cars[index];
     const [over, setOver] = useState(false);
-    const [pickupTime, setPickupTime] = useState([]);
+    const [pickupTime, setPickupTime] = useState();
+
+    function increaseCapacity() {
+        let newCars = cars.map((car, j) => {
+            if (index === j) {
+                let newCar = _.cloneDeep(car);
+                newCar.increaseCapacity();
+                return newCar;
+            }
+            return car;
+        });
+        setCars(newCars);
+    }
+
+    function decreaseCapacity() {
+        let newCars = cars.map((car, j) => {
+            if (index === j) {
+                let newCar = _.cloneDeep(car);
+                const removedPassenger = newCar.decreaseCapacity();
+                
+                if (removedPassenger != null) {
+                    const passengerEntry = car.passengers.find((p) => {
+                        return removedPassenger.ID === p.ID;
+                    });
+                    deassign(passengerEntry);
+                    return newCar;
+                }
+            }
+            return car;
+        });
+        setCars(newCars);
+    }
 
     function removeDriver() {
-        if (car.driver.id === null) {
+        if (!car.driver || !car.driver.ID || viewOnly) {
             return;
         }
 
@@ -53,9 +84,8 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
         deleteCar(index);
     }
 
-    // MAY NOT BE RIGHT
-    function handleTableChange(input) {
-        setPickupTime(input.target.value);
+    function handleTimeChange(input) {
+        setPickupTime(pickupTime);
         let newCars = cars.map((car, j) => {
             if (index === j) {
                 let newCar = _.cloneDeep(car);
@@ -69,20 +99,24 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
 
     useEffect(() => {
         car = cars[index];
-        setPickupTime(timeOptions[0].name);    
-    }, [index]);
+    }, []);
 
 
     return (
         <div className="car" > 
             <div className={over ? "carHeader over" : "carHeader"} >
-                <div className="pickupLocation not-desktop"> {car.getPickupLocations()} </div>
+                <div className={`changeCapacity ${viewOnly ? "view-only" : ""}`}>
+                    <i className="material-icons remove-icon noSelect" onClick={decreaseCapacity}>remove</i>
+                    <i className="material-icons add-icon noSelect" onClick={increaseCapacity}>add</i>
+                </div>
+
+                <div className="pickupLocation not-desktop"> {car.getPickupLocations} </div>
                 <div className="pickupTime not-desktop">
                     {viewOnly 
                         ? 
                             <>{car.pickupTime}</>
                         : 
-                            <select className="select pickupTime" onChange={handleTableChange} value={pickupTime}>
+                            <select className="select pickupTime" onChange={handleTimeChange} value={pickupTime}>
                                 { timeOptions.map((time) => {
                                     return <option className="select-option">{time.name}</option>
                                 })}                                
@@ -92,8 +126,8 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
 
                 <div className="relative not-desktop">
                     <div className="driverDetails">
-                        <h3 className="driverName"> {car.driver.name} </h3>
-                        <h4 className="driverPhone">{car.driver.phone}</h4>
+                        <h3 className="driverName"> {car.driver ? car.driver.name : "None"} </h3>
+                        <h4 className="driverPhone">{car.driver ? car.driver.phone: "-"}</h4>
                     </div>
 
                     <div className={`hoverbox ${viewOnly ? "view-only" : ""}`}
@@ -108,13 +142,13 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
                 <div className="mobile-only">
                     <div className="carHeaderMobile">
                         <div className="headerRow">
-                            <h3 className="driverName"> {car.driver.name} </h3>
+                            <h3 className="driverName"> {car.driver ? car.driver.name : "None"} </h3>
                             <div className="pickupTime">
                                 {viewOnly 
                                     ? 
                                         <>{car.pickupTime}</>
                                     : 
-                                        <select className="select pickupTime" onChange={handleTableChange} value={pickupTime}>
+                                        <select className="select pickupTime" onChange={handleTimeChange} value={pickupTime}>
                                             { timeOptions.map((time) => {
                                                 return <option className="select-option">{time.name}</option>
                                             })}                                
@@ -124,8 +158,8 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
                         </div>
 
                         <div className="headerRow">
-                            <h4 className="driverPhone">{car.driver.phone}</h4>
-                            <div className="pickupLocation"> {car.getPickupLocations()} </div>
+                            <h4 className="driverPhone">{car.driver ? car.driver.phone : "-"}</h4>
+                            <div className="pickupLocation"> {car.getPickupLocations} </div>
                         </div>
                     </div>
                 </div>
@@ -148,8 +182,10 @@ export default function Car ({ cars, setCars, index, draggedItem, deleteCar, ass
                             />
                 })}
             </div>
-
-            <button className={`btn delete-button ${viewOnly ? "view-only" : ""}`} onClick={() => { handleDeleteCar(index) }}> Delete </button>
+            
+            {!viewOnly &&
+                <button className={`btn delete-button ${viewOnly ? "view-only" : ""}`} onClick={() => { handleDeleteCar(index) }}> Delete </button>
+            }
         </div>
     )
 }
@@ -203,7 +239,7 @@ function Passenger ({ passenger, draggedItem, cars, setCars, passengerIndex, car
                     onDragExit={handlePassengerDragLeave}>
                 <div className="passengerEntryContents">
                     <div className="passengerName">{passenger.name}</div>
-                    <div className="passengerPhone">{passenger.phone}</div>
+                    <div className="passengerPhone">{!viewOnly && passenger.phone}</div>
                 </div>
 
                 <div className={`passengerEntryActions ${viewOnly ? "view-only" : ""}`} onClick={handleRemovePassenger}>

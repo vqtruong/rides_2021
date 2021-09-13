@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import User from "../admin/User";
 import { addUser } from "../../api/UserServices";
 import { Alert, Button } from 'react-bootstrap';
 import "./styles.css";

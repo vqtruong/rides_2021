@@ -38,10 +38,9 @@ export default class PickupLocationsDAO {
         }
     }
 
-    static async addPickupLocations({name}) {
+    static async addPickupLocations({name, order}) {
         try {
-            
-            return await pickupLocations.insertOne({name});
+            return await pickupLocations.insertOne({name, order});
         } catch (e) {
             console.error(`Unable to add pickupLocation: ${e}`);
             return { error: e }

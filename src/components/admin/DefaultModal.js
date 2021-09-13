@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Collapse } from 'react-bootstrap';
 import List from 'react-smooth-draggable-list';
-import { addTime } from "../../api/TimeServices";
+import { addTime, deleteTimeByID } from "../../api/TimeServices";
+import { addLocation, deleteLocationByID } from "../../api/LocationServices";
 import "./styles.css";
 
 export default function DefaultModal({showDefaults, setShowDefaults, handleCloseDefaults, timeOptions, setTimeOptions, locations, setLocations}) {
@@ -21,19 +22,21 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
     function handleAddTime(event) {
         event.preventDefault(); 
         if (addTimeText !== "") { 
-            const newID = addTime({name: addTimeText, order: timeOptions.length});
-            setTimeOptions(timeOptions.concat({name: addTimeText, order: timeOptions.length, _id: newID}));
-            setTempTimeIndexes(tempTimeIndexes.concat(timeOptions.length)); 
-            setAddTimeText("");
+            addTime({name: addTimeText, order: timeOptions.length}).then((rsp) => {
+                const newID = rsp.data._id;
+                setTimeOptions(timeOptions.concat({name: addTimeText, order: timeOptions.length, _id: newID}));
+                setTempTimeIndexes(tempTimeIndexes.concat(timeOptions.length)); 
+                setAddTimeText("");
+            })
         }
     }
 
     function handleDeleteTime(id) {
         const newTimeOptions = timeOptions.filter((time) => {
-            return time._id != id;
+            return time._id !== id;
         });
-        console.log(newTimeOptions);
-        setTimeOptions(newTimeOptions)
+        setTimeOptions(newTimeOptions);
+        deleteTimeByID(id);
     }
     
 
@@ -53,10 +56,21 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
     function handleAddLocation(event) {
         event.preventDefault(); 
         if (addLocationText !== "") { 
-            setTempLocationIndexes(tempLocationIndexes.concat(locations.length)); 
-            setLocations(locations.concat(addLocationText));
-            setAddLocationText("");
+            addLocation({name: addLocationText, order: locations.length}).then((rsp) => {
+                const newID = rsp.data._id;
+                setTempLocationIndexes(tempLocationIndexes.concat({name: addLocationText, order: locations.length, _id: newID})); 
+                setLocations(locations.concat({name: addLocationText, order: locations.length, _id: newID}));
+                setAddLocationText("");
+            });
         }
+    }
+
+    function handleDeleteLocation(id) {
+        const newLocations = locations.filter((location) => {
+            return location._id !== id;
+        });
+        setLocations(newLocations);
+        deleteLocationByID(id);
     }
 
     // GENERAL
@@ -72,9 +86,11 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
     function handleModalSubmit() {
         handleClose();
         setTempTimeIndexes(timeOptions.map((option, index) => { return index; }));
-        setTimeOptions(tempTimeIndexes.map((index) => { return timeOptions[index].name; }));
-        setLocations(tempLocationIndexes.map((index) => { return locations[index]; }));
+        setTimeOptions(tempTimeIndexes.map((index) => { return timeOptions[index]; }));
         setTempLocationIndexes(locations.map((option, index) => { return index; }));
+        setLocations(tempLocationIndexes.map((index) => { return locations[index]; }));
+        setShowTimes(false);
+        setShowPickups(false);
     }
 
     useEffect(() => {
@@ -83,13 +99,11 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
         })
         setTempTimeIndexes(newTempTimeIndexes);
 
-        const newTempLocationIndexes = timeOptions.map((option, index) => {
+        const newTempLocationIndexes = locations.map((option, index) => {
             return index;
         })
         setTempLocationIndexes(newTempLocationIndexes); 
-
-        console.log(timeOptions);
-    }, [timeOptions]);
+    }, [timeOptions, locations]);
 
     return <Modal show={showDefaults} onHide={handleCloseDefaults}>
         <Modal.Header closeButton>
@@ -123,21 +137,21 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
                             </div>
                         </form>
                         <div>
-                            <List rowHeight={30} rowWidth={800} onReOrder={handleOnTimeReorder} className="">  
-                                  
-                                { timeOptions.map(time => 
-                                    <List.Item>
-                                        <div className="listEntry">
-                                            <i className="material-icons hover-only drag-indicator">drag_indicator</i>  
-                                            <span className="rightListEntry">
-                                                <span className="listEntryText">{time.name}</span> 
-                                                <i className="material-icons clearTime" onClick={() => { handleDeleteTime(time._id)} }>clear</i>
-                                            </span> 
-                                                
-                                        </div>
-                                    </List.Item>
-                                )}
-                            </List>
+                            { timeOptions.length !== 0 &&
+                                <List rowHeight={30} rowWidth={800} onReOrder={handleOnTimeReorder} className="">  
+                                    { timeOptions.map(time => 
+                                        <List.Item>
+                                            <div className="listEntry">
+                                                <i className="material-icons hover-only drag-indicator">drag_indicator</i>  
+                                                <span className="rightListEntry">
+                                                    <span className="listEntryText">{time.name}</span> 
+                                                    <i className="material-icons clearTime" onClick={() => { handleDeleteTime(time._id)} }>clear</i>
+                                                </span> 
+                                            </div>
+                                        </List.Item>
+                                    )}
+                                </List>
+                            }
                         </div>
                     </div>
                 </Collapse>
@@ -168,19 +182,22 @@ export default function DefaultModal({showDefaults, setShowDefaults, handleClose
                                         onChange={handleLocationChange}/>
                             </div>
                         </form>
-                        <List rowHeight={30} rowWidth={800} onReOrder={handleOnLocationReorder} className="timeList">
                                 
-                                
-                        { locations.map(location => 
-                            <List.Item> 
-                                <div className="listEntry">
-                                    <span >{location}</span> 
-                                    <i className="material-icons hover-only">drag_indicator</i> 
-                                </div>
-                                    
-                            </List.Item>
-                        )}
-                        </List>
+                        { locations.length !== 0 &&
+                            <List rowHeight={30} rowWidth={800} onReOrder={handleOnLocationReorder}> 
+                                { locations.map(location => 
+                                    <List.Item>
+                                        <div className="listEntry">
+                                            <i className="material-icons hover-only drag-indicator">drag_indicator</i>  
+                                            <span className="rightListEntry">
+                                                <span className="listEntryText">{location.name}</span> 
+                                                <i className="material-icons clearTime" onClick={() => { handleDeleteLocation(location._id)} }>clear</i>
+                                            </span> 
+                                        </div>
+                                    </List.Item>
+                                )}
+                            </List>
+                        }
                     </div>
                 </Collapse>
             </div>

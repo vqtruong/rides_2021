@@ -23,7 +23,7 @@ export default class UsersCtrl {
     static async apiPostUser(req, res, next) {
         try {
             const dateCreated = new Date();
-            const { name, pickupLocation, phone, email, canDrive, isTemporaryUser } = req.body;
+            const { name, pickupLocation, phone, email, canDrive, isTemporaryUser, assigned, capacity } = req.body;
 
             const userInfo = {
                 name: name,
@@ -32,8 +32,10 @@ export default class UsersCtrl {
                 phone: phone,
                 email: email,
                 canDrive: canDrive,
-                isTemporaryUser: isTemporaryUser
-            }            
+                isTemporaryUser: isTemporaryUser,
+                assigned: assigned,
+                capacity: capacity
+            }     
 
             const userResponse = await UsersDAO.addUser(userInfo);
             res.json({status: "Success!", _id: userResponse.insertedId});
@@ -45,8 +47,7 @@ export default class UsersCtrl {
 
     static async apiUpdateUser(req, res, next) {
         try {
-            const ID = req.body.ID;
-            const { name, pickupLocation, phone, email, canDrive, isTemporaryUser } = req.body;
+            const { ID, name, pickupLocation, phone, email, canDrive, isTemporaryUser, assigned, capacity } = req.body.data;
 
             const userInfo = {
                 ID: ID,
@@ -55,7 +56,9 @@ export default class UsersCtrl {
                 phone: phone,
                 email: email,
                 canDrive: canDrive,
-                isTemporaryUser: isTemporaryUser
+                isTemporaryUser: isTemporaryUser,
+                assigned: assigned,
+                capacity: capacity
             }
 
             const userResponse = await UsersDAO.updateUser(userInfo);

@@ -12,9 +12,7 @@ export default class CarsDAO {
         }
 
         try {
-            // console.log("\n\n\ncars")
             cars = await conn.db(process.env.RIDES_NS).collection("cars");
-            // console.log(cars);
         } catch (e) {
             console.error(`Unable to establish connection in carsDAO: ${e}`)
         }
@@ -49,6 +47,7 @@ export default class CarsDAO {
                 passengers: passengers,
                 capacity: capacity
             }
+
             return await cars.insertOne(newCar);
         } catch (e) {
             console.error(`Unable to add car: ${e}`);

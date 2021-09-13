@@ -12,13 +12,14 @@ export default class PickupLocationsCtrl {
 
     static async apiPostPickupLocations(req, res, next) {
         try {
-            const { name } = req.body;
+            const { name, order } = req.body;
             const pickupLocationInfo = {
-                name: name
+                name: name,
+                order: order
             }            
 
-            await PickupLocationsDAO.addPickupLocations(pickupLocationInfo);
-            res.json({status: "Success!"});
+            const postResponse = await PickupLocationsDAO.addPickupLocations(pickupLocationInfo);
+            res.json({status: "Success!", _id: postResponse.insertedId});
         } catch (e) {
             res.status(500).json({error: e.message});
         }

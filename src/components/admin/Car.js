@@ -1,6 +1,8 @@
+import User from "./User.js"
+
 export default class Car {
-    constructor(id, pickupLocations, pickupTime, driver, passengers) {
-        this.id = id;
+    constructor(ID, pickupLocations, pickupTime, driver, passengers) {
+        this.ID = ID;
         this.pickupLocations = pickupLocations;
         this.pickupTime = pickupTime;
         this.driver = driver;
@@ -11,30 +13,23 @@ export default class Car {
 
     getPickupLocations() {
         let str = "";
-        if (this.pickupLocations.length === 0) {
-            return "-";
-        }
+        if (this.pickupLocations.length === 0) return "-";
+        
         for (let i = 0; i < this.pickupLocations.length; i++) {
-            if (i !== this.pickupLocations.length - 1) {
-                str += this.pickupLocations[i] + ", ";
-            }
-            else {
-                str += this.pickupLocations[i];
-            }
+            if (i !== this.pickupLocations.length - 1) str += this.pickupLocations[i] + ", ";
+            else if (this.pickupLocations[i] !== "") str += this.pickupLocations[i];
         }
         return str;
     }
 
     addPickupLocations(location) {
-        if (location === undefined || location === null) {
-            return;
-        }
+        
+        if (location === undefined || location === null) return;
+        
 
         for (let i = 0; i < this.pickupLocations.length; i++) {
             // If the location already exists, don't add it
-            if (this.pickupLocations[i] === location) {
-                return;
-            }
+            if (this.pickupLocations[i] === location) return;
         }
         this.pickupLocations.push(location);
     }
@@ -42,9 +37,8 @@ export default class Car {
     removePassenger(passengerIndex) {
         this.passengers[passengerIndex].reset();
         this.pickupLocations = [];
-        for (let i = 0; i < this.passengers.length; i++) {
+        for (let i = 0; i < this.passengers.length; i++) 
             this.addPickupLocations(this.passengers[i].pickupLocation);
-        }
     }
 
     setPassengers(p0, p1, p2, p3) {
@@ -85,5 +79,25 @@ export default class Car {
             }
         }
         return false;
+    }
+
+    increaseCapacity() {
+        this.capacity += 1;
+        this.passengers.push(new User({
+            name: "None",
+            phone: "-",
+            email: "None",
+            ID: null,
+            assigned: false,
+            pickupLocation: undefined
+        }));
+    }
+
+    decreaseCapacity() {
+            if (this.passengers.length === 0) return null;
+            
+            const p = this.passengers[this.passengers.length-1]
+            this.passengers = this.passengers.slice(0, this.passengers.length-1);
+            return p;
     }
 }

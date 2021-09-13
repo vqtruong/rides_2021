@@ -10,7 +10,7 @@ export default function Sidebar ({ users, setUsers, setDraggedItem, showAddUserM
 
     const [sortUser, setSortUser] = useState("Sort By: Date Added");
     function handleChangeSort(input) {
-        const sortType = input.target.value
+        const sortType = input.target.value;
         if (sortUser === sortType) return;
 
         setSortUser(sortType);
@@ -41,10 +41,10 @@ export default function Sidebar ({ users, setUsers, setDraggedItem, showAddUserM
         }
         else if (sortType === "Sort By: Date Added") {
             const sorted = [...users].sort((first, second) => {
-                if (first.id < second.id) {
+                if (first.date < second.date) {
                     return -1;
                 }
-                else if (first.id > second.id) {
+                else if (first.date > second.date) {
                     return 1;
                 }
                 return 0;
@@ -131,14 +131,14 @@ function SidebarEntry ({ user, setDraggedItem, handleDeleteUser, setShowUserProf
                     drop={"right"}
                     variant="light"
                     title={` `}>
-                <Dropdown.Item eventKey="1">
-                    <div className="dropdownItem" onClick={userProfileClicked}>
+                <Dropdown.Item eventKey="1" onClick={userProfileClicked}>
+                    <div className="dropdownItem">
                         <i className="material-icons profile-icon">person</i>Profile
                     </div>                        
                 </Dropdown.Item>
 
-                <Dropdown.Item eventKey="2">
-                    <div className="dropdownItem" onClick={() => { handleDeleteUser(user.ID); }} >
+                <Dropdown.Item eventKey="2" onClick={() => { handleDeleteUser(user.ID); }}>
+                    <div className="dropdownItem" >
                         <i className="material-icons remove-icon">delete</i>Delete
                     </div>
                 </Dropdown.Item>
@@ -149,9 +149,4 @@ function SidebarEntry ({ user, setDraggedItem, handleDeleteUser, setShowUserProf
     )
 }
 
-{/* <i className="material-icons">chevron_right</i> 
-            <div className={showDropRight ? "dropRightMenu" : "hide"}>
-                <li>Profile</li>
-                <li>Delete</li>
-            </div>  */}
 
